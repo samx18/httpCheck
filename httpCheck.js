@@ -1,6 +1,5 @@
 const http = require('http');
 const https = require('https');
-const request=require('request');
 const env = require('./env.json')
 const url = require('url');
 let healthCheck = false // Keep healthcheck as false till it passes
