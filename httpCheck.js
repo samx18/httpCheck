@@ -12,8 +12,8 @@ const hookUrl = env.webhook;
 function getHealthCheckStatus(healthCheck,callback){
   var options = {
       method: 'HEAD',
-      host: '52.9.179.3',
-      port: 805
+      host: env.instance,
+      port: 8005
   };
   var req = http.get(options, function(res) {
     const statusCode = res.statusCode;
@@ -44,10 +44,10 @@ function getHealthCheckStatus(healthCheck,callback){
 getHealthCheckStatus(healthCheck,function(x){
   if (x){
     console.log('HTTP health check passed.')
-    data = 'Initializing health checks on EBS ... \n :white_check_mark: Health check for EBS login page passed.'
+    data = ':white_check_mark:CTR Demo R12.1.3: Health check for EBS login page passed.'
   }else{
     console.log('HTTP health check failed, please have a look')
-    data = 'Initializing health checks on EBS ... \n :warning: Health check for EBS login page failed, please have a look.'
+    data = ':warning: Health check for EBS login page failed, please have a look.'
   }
   const slackMessage = {
       channel: slackChannel,
