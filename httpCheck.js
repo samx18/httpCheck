@@ -44,10 +44,10 @@ function getHealthCheckStatus(healthCheck,callback){
 getHealthCheckStatus(healthCheck,function(x){
   if (x){
     console.log('HTTP health check passed.')
-    data = ':white_check_mark:CTR Demo R12.1.3: Health check for EBS login page passed.'
+    data = 'Initializing health check for `VISDEMO` \n :ok: EBS login page passed.'
   }else{
     console.log('HTTP health check failed, please have a look')
-    data = ':warning: Health check for EBS login page failed, please have a look.'
+    data = 'Initializing health check for `VISDEMO` \n :warning: EBS login page failed, please have a look.'
   }
   const slackMessage = {
       channel: slackChannel,

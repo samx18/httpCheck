@@ -4,7 +4,7 @@ const https = require('https');
 const url = require('url');
 let healthCheck = false; // Keep healthcheck as false till it passes
 let errorFlag = false; // Flag used to prevent node from publishing to slack more than once in case of an error & timeout
-const slackChannel = '#bot-testing';
+const slackChannel = '#notifications';
 const hookUrl = process.env.SLACK_WEBHOOK;
 
 
@@ -47,10 +47,10 @@ exports.handler = (event, context, callback) => {
         var data;
         if (x){
             console.log('HTTP health check passed.');
-            data = 'Initializing health checks on EBS ... \n :white_check_mark: Health check for EBS login page passed.';
+            data = 'Initializing health check for `VISDEMO` \n :ok: EBS login page passed.';
         }else{
             console.log('HTTP health check failed, please have a look');
-            data = 'Initializing health checks on EBS ... \n :warning: Health check for EBS login page failed, please have a look.';
+            data = 'Initializing health check for `VISDEMO` \n :warning: EBS login page failed, please have a look.';
         }
         const slackMessage = {
         channel: slackChannel,
