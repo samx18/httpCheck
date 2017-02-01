@@ -13,7 +13,7 @@ function getHealthCheckStatus(healthCheck,callback){
   var options = {
       method: 'HEAD',
       host: env.instance,
-      port: 8005
+      port: env.port
   };
   var req = http.get(options, function(res) {
     const statusCode = res.statusCode;
