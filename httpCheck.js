@@ -4,7 +4,7 @@ const env = require('./env.json')
 const url = require('url');
 let healthCheck = false // Keep healthcheck as false till it passes
 let errorFlag = false // Flag used to prevent node from publishing to slack more than once in case of an error & timeout
-const slackChannel = '#bot-testing';
+const slackChannel = env.slackchannel;
 const hookUrl = env.webhook;
 
 
