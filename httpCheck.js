@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const env = require('./env.json')
 const url = require('url');
+let statusCode = 0;
 let healthCheck = false // Keep healthcheck as false till it passes
 let errorFlag = false // Flag used to prevent node from publishing to slack more than once in case of an error & timeout
 const slackChannel = env.slackchannel;
@@ -13,20 +14,24 @@ function getHealthCheckStatus(healthCheck,callback){
   var options = {
       method: 'HEAD',
       host: env.instance,
+      path: env.path,
       port: env.port
   };
-  var req = http.get(options, function(res) {
-    const statusCode = res.statusCode;
+  var req = https.get(options, function(res) {
+    statusCode = res.statusCode;
     console.log(JSON.stringify(res.headers));
     console.log(statusCode);
-    healthCheck = true;
-    callback(healthCheck);
+    if (statusCode == 200) {
+        healthCheck = true;
+    }
+    callback(healthCheck,statusCode);
   });
 
   // handle apache errors
   req.on('error', function(err) {
     console.log('Error occoured!');
-    callback(healthCheck);
+    console.log(err);
+    callback(healthCheck,statusCode);
     errorFlag = true;
   });
 
@@ -34,7 +39,7 @@ function getHealthCheckStatus(healthCheck,callback){
 
   req.setTimeout( 2000, function( ) {
       console.log('Timeout occured!');
-      callback(healthCheck);
+      callback(healthCheck,statusCode);
       req.abort();
       errorFlag = true;
   });
@@ -42,12 +47,13 @@ function getHealthCheckStatus(healthCheck,callback){
 
 
 getHealthCheckStatus(healthCheck,function(x){
+  var data;
   if (x){
-    console.log('HTTP health check passed.')
-    data = 'Initializing health check for `VISDEMO` \n :ok: EBS login page passed.'
+    console.log('HTTP health check passed.');
+    data = 'Initializing health check for `VISDEMO` \n Received Status Code `' + statusCode + '`\n :ok: EBS login page passed.'
   }else{
-    console.log('HTTP health check failed, please have a look')
-    data = 'Initializing health check for `VISDEMO` \n :warning: EBS login page failed, please have a look.'
+    console.log('HTTP health check failed, please have a look');
+    data = 'Initializing health check for `VISDEMO` \n Received Status Code `' + statusCode + '`\n :warning: EBS login page failed, please have a look.'
   }
   const slackMessage = {
       channel: slackChannel,
